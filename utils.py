@@ -1,0 +1,13 @@
+def show_menu():
+    print("\n" + "*" * 40)
+    print("*        🚀 TASKFLOW DEVOPS        *")
+    print("*" * 40)
+    print("📌 ¿Qué deseas hacer?")
+    print()
+    print("  [1] ➕ Agregar nueva tarea")
+    print("  [2] 📋 Ver lista de tareas")
+    print("  [3] ✅ Marcar tarea como completada")
+    print("  [4] 🗑️  Eliminar una tarea")
+    print("  [5] 🚪 Salir del sistema")
+    print()
+    print("*" * 40)
