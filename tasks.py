@@ -11,33 +11,31 @@ def add_task(tasks, title):
     """
     Agrega una nueva tarea a la lista de tareas.
 
-    Antes de crear la tarea, verifica que no exista otra con el mismo
-    título (sin distinguir mayúsculas y minúsculas). Si el título ya
-    existe, muestra un mensaje de error y no agrega la tarea.
-
-    Args:
-        tasks (list): Lista de tareas existentes.
-        title (str): Título de la nueva tarea.
-
-    Returns:
-        None
+    Valida que el título no esté vacío y que no exista otra tarea
+    con el mismo título. La nueva tarea se registra inicialmente
+    como pendiente.
     """
     try:
+        # Validar que el título no esté vacío
+        if not title.strip():
+            print("❌ Error: El título de la tarea no puede estar vacío.")
+            return
+
         # Verificar si ya existe una tarea con el mismo título
-        title_lower = title.lower()
+        title_lower = title.strip().lower()
 
         if any(task[KEY_TITLE].lower() == title_lower for task in tasks):
-            print("Error: ya existe una tarea con ese título")
+            print("❌ Error: ya existe una tarea con ese título")
             return
 
         new_task = {
             KEY_ID: len(tasks) + 1,
-            KEY_TITLE: title,
+            KEY_TITLE: title.strip(),
             KEY_COMPLETED: False
         }
 
         tasks.append(new_task)
-        print("✅ Tarea agregada")
+        print("✅ Tarea agregada correctamente")
 
     except Exception as e:
         print("❌ Error inesperado al agregar la tarea:", e)
