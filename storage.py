@@ -1,10 +1,9 @@
 import json
 import os
 
-FILE_NAME = "tasks.json"
+from models import REQUIRED_FIELDS, normalize_task, is_valid_task
 
-# Campos obligatorios que debe tener cada tarea
-REQUIRED_FIELDS = {"id", "title", "completed"}
+FILE_NAME = "tasks.json"
 
 
 def load_tasks():
@@ -31,6 +30,9 @@ def load_tasks():
         valid_tasks = []
 
         for index, task in enumerate(data):
+            # Convertir tareas con formato anterior al modelo actual
+            task = normalize_task(task)
+
             # Validar que cada tarea sea un diccionario
             if not isinstance(task, dict):
                 print(f"Tarea en posición {index} ignorada: estructura inválida.")
@@ -42,6 +44,11 @@ def load_tasks():
                     f"Tarea en posición {index} ignorada: "
                     f"faltan campos obligatorios {REQUIRED_FIELDS}."
                 )
+                continue
+
+            # Validar tipos y valores según el modelo
+            if not is_valid_task(task):
+                print(f"Tarea en posición {index} ignorada: datos inválidos.")
                 continue
 
             valid_tasks.append(task)
