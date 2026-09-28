@@ -21,7 +21,12 @@ def load_tasks():
 
     try:
         with open(FILE_NAME, "r", encoding="utf-8") as file:
-            data = json.load(file)
+            content = file.read()
+
+        if not content.strip():
+            return []
+
+        data = json.loads(content)
 
         # Validar que el contenido sea una lista
         if not isinstance(data, list):
