@@ -175,3 +175,29 @@ def delete_task(tasks, task_id):
             return
 
     print("Error: ID no encontrado")
+    
+def edit_task(tasks, task_id, new_title):
+    """
+    Edita el nombre de una tarea existente.
+
+    Busca una tarea mediante su ID y modifica su título.
+    No permite guardar un nombre vacío.
+    """
+
+    try:
+        task_id = int(task_id)
+    except ValueError:
+        print("❌ Error: El ID debe ser un número.")
+        return
+
+    if not new_title.strip():
+        print("❌ Error: El nombre de la tarea no puede estar vacío.")
+        return
+
+    for task in tasks:
+        if task[KEY_ID] == task_id:
+            task[KEY_TITLE] = new_title.strip()
+            print("✅ Tarea editada correctamente")
+            return
+
+    print("❌ Error: No se encontró una tarea con ese ID")
