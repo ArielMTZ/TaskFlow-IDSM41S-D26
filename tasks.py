@@ -1,10 +1,15 @@
 # ==============================
-# CONSTANTES DE CLAVES (MEJORA DE LEGIBILIDAD)
+# MODELO DE DATOS (definido en models.py)
 # ==============================
 
-KEY_ID = "id"
-KEY_TITLE = "title"
-KEY_COMPLETED = "completed"
+from models import (
+    KEY_ID,
+    KEY_TITLE,
+    KEY_STATUS,
+    create_task,
+    is_completed,
+    mark_completed,
+)
 
 
 def add_task(tasks, title):
@@ -30,14 +35,13 @@ def add_task(tasks, title):
             print("Error: ya existe una tarea con ese título")
             return
 
-        new_task = {
-            KEY_ID: len(tasks) + 1,
-            KEY_TITLE: title,
-            KEY_COMPLETED: False
-        }
+        new_task = create_task(tasks, title)
 
         tasks.append(new_task)
-        print("✅ Tarea agregada")
+        print(f"✅ Tarea agregada con ID {new_task[KEY_ID]}")
+
+    except ValueError as e:
+        print("❌ Error:", e)
 
     except Exception as e:
         print("❌ Error inesperado al agregar la tarea:", e)
@@ -65,10 +69,10 @@ def list_tasks(tasks):
         for task in tasks:
             task_id = task[KEY_ID]
             title = task[KEY_TITLE]
-            completed = task[KEY_COMPLETED]
+            status = task[KEY_STATUS]
 
-            status = "✔" if completed else "✘"
-            print(f"{task_id}. {title} [{status}]")
+            icon = "✔" if is_completed(task) else "✘"
+            print(f"{task_id}. {title} [{icon} {status}]")
 
     except Exception as e:
         print("❌ Error al mostrar las tareas:", e)
@@ -119,7 +123,10 @@ def complete_task(tasks, task_id):
 
         for task in tasks:
             if task[KEY_ID] == task_id:
-                task[KEY_COMPLETED] = True
+                if is_completed(task):
+                    print("ℹ️ La tarea ya estaba completada")
+                    return
+                mark_completed(task)
                 print("✅ Tarea marcada como completada")
                 return
 
@@ -153,8 +160,8 @@ def delete_task(tasks, task_id):
         return
 
     for task in tasks:
-        if task["id"] == task_id:
-            confirm = input(f"¿Seguro que deseas eliminar '{task['title']}'? (s/n): ")
+        if task[KEY_ID] == task_id:
+            confirm = input(f"¿Seguro que deseas eliminar '{task[KEY_TITLE]}'? (s/n): ")
 
             if confirm.lower() != "s":
                 print("Eliminación cancelada")
@@ -162,7 +169,7 @@ def delete_task(tasks, task_id):
             tasks.remove(task)
 
             for i, t in enumerate(tasks):
-                t["id"] = i + 1
+                t[KEY_ID] = i + 1
 
             print("Tarea eliminada")
             return
