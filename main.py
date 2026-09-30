@@ -2,8 +2,10 @@ from tasks import (
     add_task,
     list_tasks,
     complete_task,
-    delete_task
+    delete_task,
+    edit_task
 )
+
 from storage import load_tasks, save_tasks
 from utils import show_menu
 
@@ -17,11 +19,10 @@ def main():
 
     Carga las tareas almacenadas desde el archivo JSON y muestra
     continuamente el menú principal. Permite agregar, listar,
-    completar y eliminar tareas.
+    completar, eliminar y editar tareas.
 
     Los cambios realizados en las tareas se guardan automáticamente
-    en el archivo únicamente cuando una operación se completa
-    correctamente.
+    cuando una operación se completa correctamente.
 
     Returns:
         None
@@ -42,7 +43,7 @@ def main():
             continue
 
         # Validar rango de opciones
-        if option not in ["1", "2", "3", "4", "5"]:
+        if option not in ["1", "2", "3", "4", "5", "6"]:
             print("Error: Opción fuera de rango.")
             continue
 
@@ -59,32 +60,37 @@ def main():
 
         # Completar tarea
         elif option == "3":
-            try:
-                task_id = int(
-                    input("ID de la tarea a completar: ").strip()
-                )
+            task_id = input(
+                "ID de la tarea a completar: "
+            ).strip()
 
-                if complete_task(tasks, task_id):
-                    save_tasks(tasks)
-
-            except ValueError:
-                print("ID inválido. Debe ser un número.")
+            if complete_task(tasks, task_id):
+                save_tasks(tasks)
 
         # Eliminar tarea
         elif option == "4":
-            try:
-                task_id = int(
-                    input("ID de la tarea a eliminar: ").strip()
-                )
+            task_id = input(
+                "ID de la tarea a eliminar: "
+            ).strip()
 
-                if delete_task(tasks, task_id):
-                    save_tasks(tasks)
+            if delete_task(tasks, task_id):
+                save_tasks(tasks)
 
-            except ValueError:
-                print("ID inválido. Debe ser un número.")
+        # Editar tarea
+        elif option == "5":
+            task_id = input(
+                "ID de la tarea a editar: "
+            ).strip()
+
+            new_title = input(
+                "Nuevo nombre de la tarea: "
+            ).strip()
+
+            if edit_task(tasks, task_id, new_title):
+                save_tasks(tasks)
 
         # Salir
-        elif option == "5":
+        elif option == "6":
             save_tasks(tasks)
             print("¡Hasta luego!")
             break
